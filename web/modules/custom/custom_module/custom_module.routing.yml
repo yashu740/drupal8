@@ -1,0 +1,15 @@
+custom_module.form:
+  path: '/form'
+  defaults:
+    _title: 'Register Form'
+    _form: '\Drupal\custom_module\Form\CustomForm'
+  requirements:
+    _permission: 'access content'
+
+custom_module.thankyou:
+ path: '/thankyou'
+ defaults:
+   _title: 'Thank You Page'
+   _controller: '\Drupal\custom_module\Controller\ThankyouController::successpage'
+ requirements:
+   _permission: 'access content'
