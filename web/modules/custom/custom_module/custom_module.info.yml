@@ -1,0 +1,5 @@
+name: Custom Module
+description: This module is used for learning module development
+type: module
+core: 8.x
+package: Custom

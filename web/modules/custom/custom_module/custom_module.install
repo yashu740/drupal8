@@ -1,0 +1,63 @@
+<?php
+function custom_module_schema() {
+  $schema['register'] = array(
+    'description' => 'Stores value in custom table',
+    'fields' => array(
+      'pid' => array(
+        'type' => 'serial',
+        'not null' => TRUE,
+        'description' => 'Primary Key: Unique id for employee',
+      ),
+        'name' => array(
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'default' => '',
+        'description' => 'Name of a person.',
+      ),
+       'email' => array(
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'default' => '',
+        'description' => 'Store email of a person',
+      ),
+      'gender' => array(
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'default' => '',
+        'description' => 'Store gender of a person',
+      ),
+      'phone' => array(
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'default' => '',
+        'description' => 'Store phone of a person',
+      ),
+      'address' => array(
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'default' => '',
+        'description' => 'Store address of a person',
+      ),
+      'exercise' => array(
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+        'description' => 'Store exercise of a person',
+      ),
+      'privacy_policy' => array(
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+        'description' => 'Store privacy_policy of a person',
+      ),
+    ),
+    'primary key' => array('pid'),
+  );
+ 
+  return $schema;
+}
