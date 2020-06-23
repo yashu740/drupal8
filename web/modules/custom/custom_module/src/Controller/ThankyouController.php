@@ -17,6 +17,7 @@ class ThankyouController extends ControllerBase {
    *   A simple renderable array.
    */
   public function successpage() {
+  
     $result = \Drupal::database()->select('register', 'n')
             ->fields('n', array('name', 'email', 'gender', 'phone','address','exercise' , 'privacy_policy'))
             ->execute()->fetchAllAssoc('name');
