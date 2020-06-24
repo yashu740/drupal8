@@ -10,6 +10,6 @@ custom_module.thankyou:
  path: '/thankyou'
  defaults:
    _title: 'Thank You Page'
-   _controller: '\Drupal\custom_module\Controller\ThankyouController::successpage'
+   _controller: '\Drupal\custom_module\Controller\ThankyouController::successPage'
  requirements:
    _permission: 'access content'
