@@ -2,8 +2,6 @@
 namespace Drupal\custom_module\Controller;
  
 use Drupal\Core\Controller\ControllerBase;
-use Symfony\Component\HttpFoundation\JsonResponse;
-use Drupal\Core\Database\Database;
  
 /**
  * Provides route responses for the Example module.
@@ -16,7 +14,7 @@ class ThankyouController extends ControllerBase {
    * @return array
    *   A simple renderable array.
    */
-  public function successpage() {
+  public function successPage() {
     $result = \Drupal::database()->select('register', 'n')
             ->fields('n', array('name', 'email', 'gender', 'phone','address','exercise' , 'privacy_policy'))
             ->execute()->fetchAllAssoc('name');

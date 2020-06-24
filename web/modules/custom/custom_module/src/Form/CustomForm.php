@@ -10,7 +10,6 @@ namespace Drupal\custom_module\Form;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Component\Utility\UrlHelper;
-use Drupal\Core\Url;
 use Drupal\Core\Database\Database;
 
 /**
@@ -43,11 +42,10 @@ public function buildForm(array $form, FormStateInterface $form_state) {
   
   $form['gender'] = [
       '#type' => 'select',
-      '#title' => $this->t('Sex'),
+      '#title' => $this->t('Gender'),
       '#options' => [
         'male' => $this->t('Male'),
         'female' => $this->t('Female'),
-        'na' => $this->t('N/A'),
       ],
       '#empty_option' => $this->t('-select-'),
       '#required' => 'TRUE',
