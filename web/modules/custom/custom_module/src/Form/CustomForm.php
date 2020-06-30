@@ -5,6 +5,7 @@ namespace Drupal\custom_module\Form;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Database\Database;
+use Drupal\Core\Url;
 
 /**
  * Contribute form.
@@ -101,7 +102,7 @@ class CustomForm extends FormBase {
     }
     if (preg_match("/^([a-zA-Z0-9])+([a-zA-Z0-9\._-])↪*@([a-zA-Z0-9_-])+([a-zA-Z0-9\._-]+)+$/",
                $email)) {
-      $form_state->setErrorByName('email', $this->t('*The email address '$email' is not valid.'));
+      $form_state->setErrorByName('email', $this->t('*The email address "$email" is not valid.'));
     }
 
     // Privacy_policy field validation.
