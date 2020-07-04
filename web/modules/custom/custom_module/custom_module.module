@@ -1,0 +1,49 @@
+<?php
+
+/**
+ * @file
+ * Example of how to use Drupal's mail API.
+ */
+
+use Drupal\Core\Mail\MailFormatHelper;
+
+/**
+ * Implements hook_mail().
+ */
+function custom_module_mail($key, &$message, $params) {
+  $options = [
+    'langcode' => $message['langcode'],
+  ];
+  switch ($key) {
+    case 'the_mail_key':
+      $body =
+          "Hi,
+            Thanks, We will get back to you shortly.";
+
+      $from = \Drupal::config('system.site')->get('mail');
+      $message['subject'] = t('Form Acknowledgement');
+      $message['body'][] = MailFormatHelper::htmlToText($body);
+      break;
+
+    case 'the_mail_key_one':
+      $bodyone =
+          " Below are the details,
+
+            First Name: " . $params['name'] . "
+            Email Address: " . $params['email'] . "
+            Gender: " . $params['gender'] . "
+            Phone: " . $params['phone'] . "
+            Address: " . $params['address'] . "
+            Phone: " . $params['phone'] . "
+            Privacy: " . $params['privacy_policy'] . "
+            Exercise: " . $params['exercise'] . "
+
+            Thank you";
+
+      $message['from'] = \Drupal::config('system.site')->get('mail');
+      $message['to'] = \Drupal::config('system.site')->get('mail');
+      $message['subject'] = t('Filled Application Form');
+      $message['body'][] = MailFormatHelper::htmlToText($bodyone);
+
+  }
+}

@@ -22,6 +22,7 @@
         "drupal/console": "^1.0.2",
         "drupal/core": "^8.8.4",
         "drupal/core-composer-scaffold": "^8.8.4",
+        "drupal/smtp": "^1.0",
         "drupal/views_slideshow": "^4.6",
         "drush/drush": "^9.7.1 | ^10.0.0",
         "vlucas/phpdotenv": "^4.0",
