@@ -1,0 +1,6 @@
+custom_module.config:
+  title: 'Configuration Form'
+  route_name: custom_module.config
+  description: 'A description for the meu entry'
+  parent: system.admin_config_system
+  weight: 99

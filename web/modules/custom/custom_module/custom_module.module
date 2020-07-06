@@ -16,9 +16,8 @@ function custom_module_mail($key, &$message, $params) {
   ];
   switch ($key) {
     case 'the_mail_key':
-      $body =
-          "Hi,
-            Thanks, We will get back to you shortly.";
+
+      $body = \Drupal::config('custom_module.settings')->get('body');
 
       $from = \Drupal::config('system.site')->get('mail');
       $message['subject'] = t('Form Acknowledgement');
