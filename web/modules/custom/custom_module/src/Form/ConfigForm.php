@@ -36,10 +36,20 @@ class ConfigForm extends ConfigFormBase {
     $config = $this->config('custom_module.settings');
     $form['body'] = [
       '#type' => 'textarea',
-      '#title' => $this->t('body'),
+      '#title' => $this->t('Body'),
       '#default_value' => $config->get('body'),
     ];
     return $form;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function validateForm(array &$form, FormStateInterface $form_state) {
+    $body = $form_state->getValue('body');
+    if (empty($body)) {
+      $form_state->setErrorByName('body', t('Please enter a value!'));
+    }
   }
 
   /**

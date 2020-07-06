@@ -19,7 +19,7 @@ custom_module.config:
   path: '/admin/config/custom_module/settings'
   defaults:
     _form: '\Drupal\custom_module\Form\ConfigForm'
-    _title: 'Configuration Form'
+    _title: 'Register Form Configuration'
   requirements:
     _permission: 'access administration pages'
   options:

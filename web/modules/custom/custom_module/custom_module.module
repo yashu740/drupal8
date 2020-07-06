@@ -15,7 +15,7 @@ function custom_module_mail($key, &$message, $params) {
     'langcode' => $message['langcode'],
   ];
   switch ($key) {
-    case 'the_mail_key':
+    case 'anonymous_user':
 
       $body = \Drupal::config('custom_module.settings')->get('body');
 
@@ -24,8 +24,8 @@ function custom_module_mail($key, &$message, $params) {
       $message['body'][] = MailFormatHelper::htmlToText($body);
       break;
 
-    case 'the_mail_key_one':
-      $bodyone =
+    case 'admin_user':
+      $text =
           " Below are the details,
 
             First Name: " . $params['name'] . "
@@ -42,7 +42,7 @@ function custom_module_mail($key, &$message, $params) {
       $message['from'] = \Drupal::config('system.site')->get('mail');
       $message['to'] = \Drupal::config('system.site')->get('mail');
       $message['subject'] = t('Filled Application Form');
-      $message['body'][] = MailFormatHelper::htmlToText($bodyone);
+      $message['body'][] = MailFormatHelper::htmlToText($text);
 
   }
 }
