@@ -143,7 +143,8 @@ class CustomForm extends FormBase {
     $mailManager = \Drupal::service('plugin.manager.mail');
 
     $module = 'custom_module';
-    $key = 'the_mail_key';
+    $key = 'anonymous_user';
+    $keys = 'admin_user';
 
     $from = $this->config('system.site')->get('mail');
     $to = $form_values['email'];
@@ -152,7 +153,7 @@ class CustomForm extends FormBase {
     $langcode = \Drupal::currentUser()->getPreferredLangcode();
     $send = TRUE;
     $result = $mailManager->mail($module, $key, $to, $langcode, $params, $from, $send);
-    $result2 = $mailManager->mail($module, 'the_mail_key_one', $to, $langcode, $params, $from, $send);
+    $result2 = $mailManager->mail($module, $keys, $to, $langcode, $params, $from, $send);
     if (($result['result'] == TRUE) && ($result2['result'] == TRUE)) {
       $this->messenger()->addMessage($this->t('Your message has been sent.'));
     }

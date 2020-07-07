@@ -1,0 +1,6 @@
+custom_module.config:
+  title: 'Register Form Configuration'
+  route_name: custom_module.config
+  description: 'Configure default value of registration form.'
+  parent: system.admin_config_system
+  weight: 99
