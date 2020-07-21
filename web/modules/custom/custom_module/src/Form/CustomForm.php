@@ -138,7 +138,7 @@ class CustomForm extends FormBase {
     )->execute();
     $url = Url::fromRoute('custom_module.thankyou');
     $form_state->setRedirectUrl($url);
-
+    // Email Trigger.
     $form_values = $form_state->getValues();
     $mailManager = \Drupal::service('plugin.manager.mail');
 
@@ -152,9 +152,12 @@ class CustomForm extends FormBase {
     $params = $form_values;
     $langcode = \Drupal::currentUser()->getPreferredLangcode();
     $send = TRUE;
+    $service = \Drupal::service('custom_module.say_hello');
+    $service->sayHello($module, $keys, $to, $params, $langcode, $from, $send);
     $result = $mailManager->mail($module, $key, $to, $langcode, $params, $from, $send);
-    $result2 = $mailManager->mail($module, $keys, $to, $langcode, $params, $from, $send);
-    if (($result['result'] == TRUE) && ($result2['result'] == TRUE)) {
+
+    /* $result2 = $mailManager->mail($module, $keys, $to, $langcode, $params, $from, $send);*/
+    if ($result['result'] == TRUE) {
       $this->messenger()->addMessage($this->t('Your message has been sent.'));
     }
     else {
