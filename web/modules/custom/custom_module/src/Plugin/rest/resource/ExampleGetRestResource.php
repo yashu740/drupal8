@@ -8,6 +8,7 @@ use Drupal\rest\Plugin\ResourceBase;
 use Drupal\rest\ResourceResponse;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Psr\Log\LoggerInterface;
+use Drupal\file\Entity\File;
 
 /**
  * Provides a resource to get view modes by entity and bundle.
@@ -87,29 +88,48 @@ class ExampleGetRestResource extends ResourceBase {
       ->execute();
     $nodes = Node::loadMultiple($nids);
 
-    foreach ($nodes as $node) {
+    $data = [];
 
-      $json_array['data'][] = [
+    foreach ($nodes as $node) {
+      $pdf_fid = ($node->get('field_pdf')->isEmpty() ? 0 : $node->get('field_pdf')->getValue()[0]['target_id']);
+      $image_fid = ($node->get('field_images')->isEmpty() ? 0 : $node->get('field_images')->getValue()[0]['target_id']);
+      $data[] = [
+        'pdf_fid' => $pdf_fid,
+        'image_fid' => $image_fid,
+
         'type' => $node->get('type')->target_id,
         'id' => $node->get('nid')->value,
-        'attributes' => [
-          'title' => $node->get('title')->value,
-          'body' => $node->get('body')->value,
-          'boolean' => $node->get('field_boolean')->value,
-          'pdf' => $node->field_pdf->entity->getFileUri(),
-          'image' => $node->field_images->entity->getFileUri(),
-          'number' => $node->get('field_contact')->value,
-          'selection' => $node->get('field_select')->value,
-          'Description' => $node->get('field_text')->value,
-          'url' => $node->get('field_url')->uri,
 
-        ],
+        'title' => $node->get('title')->value,
+        'body' => $node->get('body')->value,
+        'boolean' => $node->get('field_boolean')->value,
+        'number' => $node->get('field_contact')->value,
+        'selection' => $node->get('field_select')->value,
+        'Description' => $node->get('field_text')->value,
+        'url' => $node->get('field_url')->uri,
+
+      ];
+
+      $data = $data + [
+        'pdf_uri' => $this->restImageUri($pdf_fid),
+        'image_uri' => $this->restImageUri($image_fid),
       ];
     }
-
-    $response = new ResourceResponse($json_array);
-    $response->addCacheableDependency($json_array);
+    $response = new ResourceResponse($data);
+    $response->addCacheableDependency($data);
     return $response;
+  }
+
+  /**
+   * Implements helper function.
+   */
+  public function restImageUri($fid) {
+    $file = File::load($fid);
+    if (is_object($file)) {
+      $file_uri = $file->getFileUri();
+      return $file_uri;
+    }
+
   }
 
 }
