@@ -17,7 +17,7 @@ use Drupal\file\Entity\File;
  *   id = "example_get_rest_resource",
  *   label = @Translation("Example get rest resource"),
  *   uri_paths = {
- *     "canonical" = "/example-rest"
+ *     "canonical" = "/example-rest/{timestamp}"
  *   }
  * )
  */
@@ -80,40 +80,40 @@ class ExampleGetRestResource extends ResourceBase {
    * @throws \Symfony\Component\HttpKernel\Exception\HttpException
    *   Throws exception expected.
    */
-  public function get() {
+  public function get($timestamp = NULL) {
 
-    $nids = \Drupal::entityQuery('node')
-      ->condition('status', 1)
-      ->condition('type', 'example_rest_api')
-      ->execute();
-    $nodes = Node::loadMultiple($nids);
+    if ($timestamp) {
+      $nids = \Drupal::entityQuery('node')->condition('status', 1)->condition('created', $timestamp, '>')->execute();
+      $nodes = Node::loadMultiple($nids);
 
-    $data = [];
+      $data = [];
 
-    foreach ($nodes as $node) {
-      $pdf_fid = ($node->get('field_pdf')->isEmpty() ? 0 : $node->get('field_pdf')->getValue()[0]['target_id']);
-      $image_fid = ($node->get('field_images')->isEmpty() ? 0 : $node->get('field_images')->getValue()[0]['target_id']);
-      $data[] = [
-        'pdf_fid' => $pdf_fid,
-        'image_fid' => $image_fid,
+      foreach ($nodes as $node) {
+        $pdf_fid = ($node->get('field_pdf')->isEmpty() ? 0 : $node->get('field_pdf')->getValue()[0]['target_id']);
+        $image_fid = ($node->get('field_images')->isEmpty() ? 0 : $node->get('field_images')->getValue()[0]['target_id']);
+        $data[] = [
+          'pdf_fid' => $pdf_fid,
+          'image_fid' => $image_fid,
 
-        'type' => $node->get('type')->target_id,
-        'id' => $node->get('nid')->value,
+          'type' => $node->get('type')->target_id,
+          'id' => $node->get('nid')->value,
 
-        'title' => $node->get('title')->value,
-        'body' => $node->get('body')->value,
-        'boolean' => $node->get('field_boolean')->value,
-        'number' => $node->get('field_contact')->value,
-        'selection' => $node->get('field_select')->value,
-        'Description' => $node->get('field_text')->value,
-        'url' => $node->get('field_url')->uri,
+          'title' => $node->get('title')->value,
+          'body' => $node->get('body')->value,
+          'boolean' => $node->get('field_boolean')->value,
+          'number' => $node->get('field_contact')->value,
+          'selection' => $node->get('field_select')->value,
+          'Description' => $node->get('field_text')->value,
+          'url' => $node->get('field_url')->uri,
+        /*'ee' => $node->getCreatedTime(),*/
 
-      ];
+        ];
 
-      $data = $data + [
-        'pdf_uri' => $this->restImageUri($pdf_fid),
-        'image_uri' => $this->restImageUri($image_fid),
-      ];
+        $data = $data + [
+          'pdf_uri' => $this->restImageUri($pdf_fid),
+          'image_uri' => $this->restImageUri($image_fid),
+        ];
+      }
     }
     $response = new ResourceResponse($data);
     $response->addCacheableDependency($data);
