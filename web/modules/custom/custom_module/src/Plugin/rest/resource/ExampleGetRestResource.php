@@ -17,7 +17,7 @@ use Drupal\file\Entity\File;
  *   id = "example_get_rest_resource",
  *   label = @Translation("Example get rest resource"),
  *   uri_paths = {
- *     "canonical" = "/example-rest"
+ *     "canonical" = "/example-rest/{timestamp}"
  *   }
  * )
  */
@@ -80,14 +80,49 @@ class ExampleGetRestResource extends ResourceBase {
    * @throws \Symfony\Component\HttpKernel\Exception\HttpException
    *   Throws exception expected.
    */
-  public function get() {
+  public function get($timestamp = '') {
 
-    $nids = \Drupal::entityQuery('node')
-      ->condition('status', 1)
-      ->condition('type', 'example_rest_api')
-      ->execute();
-    $nodes = Node::loadMultiple($nids);
+    $time = explode("=", $timestamp);
 
+    if (!empty($time[1] && is_numeric($time[1]))) {
+
+      $human_date = date('m-d-Y', $time[1]);
+      $data_split = explode("-", $human_date);
+      $month = $data_split[0];
+      $day = $data_split[1];
+      $year = $data_split[2];
+
+      // Query to fetch the nids
+      // validate the  timestamp is proper.
+      if (checkdate($month, $day, $year)) {
+
+        $query = \Drupal::database()->select('node_field_data', 'nf');
+        $query->fields('nf', ['nid']);
+        $query->condition('nf.type', 'example_rest_api');
+        $query->condition('nf.created', $time[1], '>=');
+        $nids = $query->execute()->fetchAll();
+        $node_nid = [];
+        foreach ($nids as $key => $nid) {
+          $node_nid[$nid->nid] = $nid->nid;
+        }
+        $node_data = $node_nid;
+
+      }
+      else {
+        $data = "The entered date format is wrong.";
+        $response = new ResourceResponse($data);
+        $response->addCacheableDependency($data);
+        return $response;
+      }
+
+    }
+    else {
+
+      $nids = \Drupal::entityQuery('node')->condition('status', 1)->condition('type', 'example_rest_api')->execute();
+      $node_data = $nids;
+    }
+
+    $nodes = Node::loadMultiple($node_data);
     $data = [];
 
     foreach ($nodes as $node) {
@@ -115,6 +150,7 @@ class ExampleGetRestResource extends ResourceBase {
         'image_uri' => $this->restImageUri($image_fid),
       ];
     }
+
     $response = new ResourceResponse($data);
     $response->addCacheableDependency($data);
     return $response;
@@ -130,6 +166,19 @@ class ExampleGetRestResource extends ResourceBase {
       return $file_uri;
     }
 
+  }
+
+  /**
+   * Conversion of date format.
+   */
+  public function changeDateFormat($date_string, $format_string = 'j-F-Y H:i:s') {
+    print_r($date_string);
+    if (!$this->isTimestamp($date_string)) {
+
+      $date_string = strtotime($date_string);
+    }
+
+    return date($format_string, $date_string);
   }
 
 }
